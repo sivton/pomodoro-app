@@ -18,6 +18,11 @@ LONG_BREAK_MIN = 20
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
 
+def countDown(count):
+    canvas.itemconfig(timerText, text=f"{count}")
+    if count > 0:
+        window.after(1000, countDown, count-1)
+
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Pomodoro GUI Project")
@@ -39,13 +44,13 @@ checkBtn.grid(column=1, row=5)
 
 
 canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
-tomatoImg = PhotoImage(file="Pomodoro GUI Project/tomato.png")
+tomatoImg = PhotoImage(file="tomato.png")
 canvas.create_image(100, 112, image=tomatoImg)
-canvas.create_text(100, 130, text="00:00:00", fill="white", font=(FONT_NAME, 25, "bold"))
+timerText = canvas.create_text(100, 130, text="00:00:00", fill="white", font=(FONT_NAME, 25, "bold"))
 canvas.grid(column=1, row=2)
 
 
-
+countDown(5)
 
 
 window.mainloop()
