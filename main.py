@@ -1,5 +1,5 @@
 from tkinter import *
-
+from math import floor
 
 
 # ---------------------------- CONSTANTS ------------------------------- #
@@ -16,10 +16,23 @@ LONG_BREAK_MIN = 20
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
+def startTimer():
+    countDown(60*WORK_MIN)
+
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
 
 def countDown(count):
-    canvas.itemconfig(timerText, text=f"{count}")
+    
+    minutes = floor(count/60)
+    seconds = count%60
+    
+    if seconds < 10:
+        seconds = "0" + str(seconds)
+        
+    if minutes < 10:
+        minutes = "0" + str(minutes)
+    
+    canvas.itemconfig(timerText, text=f"00:{minutes}:{seconds}")
     if count > 0:
         window.after(1000, countDown, count-1)
 
@@ -32,7 +45,7 @@ window.config(padx=100, pady=100, bg=YELLOW)
 timerLabel = Label(text="Timer", bg=YELLOW, fg=GREEN, font=(FONT_NAME, 35, "bold"))
 timerLabel.grid(column=1, row=0)
 
-startBtn = Button(text="Start", highlightthickness=0)
+startBtn = Button(text="Start", highlightthickness=0, command=startTimer)
 startBtn.grid(column=0, row=3)
 
 resetBtn = Button(text="Reset", highlightthickness=0)
@@ -41,16 +54,11 @@ resetBtn.grid(column=2, row=3)
 checkBtn = Label(text="✓", bg=YELLOW, fg=GREEN, highlightthickness=0)
 checkBtn.grid(column=1, row=5)
 
-
-
 canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
 tomatoImg = PhotoImage(file="tomato.png")
 canvas.create_image(100, 112, image=tomatoImg)
 timerText = canvas.create_text(100, 130, text="00:00:00", fill="white", font=(FONT_NAME, 25, "bold"))
 canvas.grid(column=1, row=2)
-
-
-countDown(5)
 
 
 window.mainloop()
