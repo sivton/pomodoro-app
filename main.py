@@ -11,13 +11,29 @@ FONT_NAME = "Inter"
 WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
+WORK_SEC = WORK_MIN * 60
+SHORT_BREAK_SEC = SHORT_BREAK_MIN * 60
+LONG_BREAK_SEC = LONG_BREAK_MIN * 60
+reps = 0
 
 # ---------------------------- TIMER RESET ------------------------------- # 
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
 def startTimer():
-    countDown(60*WORK_MIN)
+    global reps
+    reps+=1
+    
+    if reps%8==0:
+        countDown(LONG_BREAK_SEC)
+        titleLabel.config(text="Long Break", fg=RED)
+        timerLabel["text"] = "LBREAK"
+    elif reps%2==0:
+        countDown(SHORT_BREAK_SEC)
+        titleLabel.config(text="Short Break", fg=PINK)
+    else:
+        countDown(WORK_SEC)
+        titleLabel.config(text="Work", fg=GREEN)
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
 
@@ -27,14 +43,16 @@ def countDown(count):
     seconds = count%60
     
     if seconds < 10:
-        seconds = "0" + str(seconds)
-        
+        seconds = f"0{seconds}"
     if minutes < 10:
-        minutes = "0" + str(minutes)
+        minutes = f"0{minutes}"
     
     canvas.itemconfig(timerText, text=f"00:{minutes}:{seconds}")
+    
     if count > 0:
         window.after(1000, countDown, count-1)
+    else:
+        startTimer()
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
@@ -42,8 +60,8 @@ window.title("Pomodoro GUI Project")
 window.config(padx=100, pady=100, bg=YELLOW)
 
 
-timerLabel = Label(text="Timer", bg=YELLOW, fg=GREEN, font=(FONT_NAME, 35, "bold"))
-timerLabel.grid(column=1, row=0)
+titleLabel = Label(text="Timer", bg=YELLOW, fg=GREEN, font=(FONT_NAME, 35, "bold"))
+titleLabel.grid(column=1, row=0)
 
 startBtn = Button(text="Start", highlightthickness=0, command=startTimer)
 startBtn.grid(column=0, row=3)
