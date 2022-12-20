@@ -4,6 +4,7 @@ from math import floor
 
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#e2979c"
+BLACK = "#000000"
 RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
@@ -11,9 +12,12 @@ FONT_NAME = "Inter"
 WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
-WORK_SEC = WORK_MIN * 60
-SHORT_BREAK_SEC = SHORT_BREAK_MIN * 60
-LONG_BREAK_SEC = LONG_BREAK_MIN * 60
+# WORK_SEC = WORK_MIN * 60
+# SHORT_BREAK_SEC = SHORT_BREAK_MIN * 60
+# LONG_BREAK_SEC = LONG_BREAK_MIN * 60
+WORK_SEC = 15
+SHORT_BREAK_SEC = 15
+LONG_BREAK_SEC = 15
 reps = 0
 
 # ---------------------------- TIMER RESET ------------------------------- # 
@@ -22,7 +26,8 @@ reps = 0
 
 def startTimer():
     global reps
-    reps+=1
+    
+    reps+=1      
     
     if reps%8==0:
         countDown(LONG_BREAK_SEC)
@@ -34,6 +39,8 @@ def startTimer():
     else:
         countDown(WORK_SEC)
         titleLabel.config(text="Work", fg=GREEN)
+    
+      
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
 
@@ -53,6 +60,11 @@ def countDown(count):
         window.after(1000, countDown, count-1)
     else:
         startTimer()
+        marks = ""
+        workSessions = floor(reps/2)
+        for _ in range(workSessions):
+            marks += "✓"
+        checkLabel.config(text=f"{marks} Completed Sessions: {workSessions}")
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
@@ -69,8 +81,8 @@ startBtn.grid(column=0, row=3)
 resetBtn = Button(text="Reset", highlightthickness=0)
 resetBtn.grid(column=2, row=3)
 
-checkBtn = Label(text="✓", bg=YELLOW, fg=GREEN, highlightthickness=0)
-checkBtn.grid(column=1, row=5)
+checkLabel = Label(bg=YELLOW, fg=BLACK, highlightthickness=0)
+checkLabel.grid(column=1, row=5)
 
 canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
 tomatoImg = PhotoImage(file="tomato.png")
